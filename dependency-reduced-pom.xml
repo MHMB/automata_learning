@@ -18,7 +18,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>com.mhmb.automatalearn.Example</mainClass>
+                  <mainClass>com.mhmb.automatalearn.TTTExample</mainClass>
                 </transformer>
               </transformers>
             </configuration>

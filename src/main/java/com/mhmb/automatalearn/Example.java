@@ -9,6 +9,7 @@ import de.learnlib.datastructure.observationtable.OTUtils;
 import de.learnlib.datastructure.observationtable.writer.ObservationTableASCIIWriter;
 import de.learnlib.filter.statistic.oracle.DFACounterOracle;
 import de.learnlib.oracle.equivalence.DFAWMethodEQOracle;
+import de.learnlib.oracle.equivalence.DFAWpMethodEQOracle;
 import de.learnlib.oracle.membership.SimulatorOracle.DFASimulatorOracle;
 import de.learnlib.util.Experiment.DFAExperiment;
 import de.learnlib.util.statistics.SimpleProfiler;
@@ -57,11 +58,13 @@ public final class Example {
         // every state of a hypothesis
         DFAWMethodEQOracle<Character> wMethod = new DFAWMethodEQOracle<>(mqOracle, EXPLORATION_DEPTH);
 
+        DFAWpMethodEQOracle<Character> wpMethod = new DFAWpMethodEQOracle<>(mqOracle, EXPLORATION_DEPTH);
+
         // construct a learning experiment from
         // the learning algorithm and the conformance test.
         // The experiment will execute the main loop of
         // active learning
-        DFAExperiment<Character> experiment = new DFAExperiment<>(lstar, wMethod, inputs);
+        DFAExperiment<Character> experiment = new DFAExperiment<>(lstar, wpMethod, inputs);
 
         // turn on time profiling
         experiment.setProfile(true);
@@ -107,22 +110,25 @@ public final class Example {
         // input alphabet contains characters 'a'..'b'
         Alphabet<Character> sigma = Alphabets.characters('a', 'b');
 
-        // create automaton
         return AutomatonBuilders.newDFA(sigma)
-                .withInitial("q0")
-                .from("q0")
-                    .on('a').to("q1")
-                    .on('b').to("q2")
-                .from("q1")
-                    .on('a').to("q0")
-                    .on('b').to("q3")
-                .from("q2")
-                    .on('a').to("q3")
-                    .on('b').to("q0")
-                .from("q3")
-                    .on('a').to("q2")
-                    .on('b').to("q1")
-                .withAccepting("q0")
-                .create();
+                   .withInitial("s1")
+                   .from("s1")
+                       .on('a').to("s2")
+                       .on('b').to("s4")
+                   .from("s2")
+                       .on('a').to("s4")
+                       .on('b').to("s3")
+                   .from("s3")
+                       .on('a').to("s1")
+                       .on('b').to("s3")
+                   .from("s4")
+                       .on('a').to("s5")
+                       .on('b').to("s4")
+                   .from("s5")
+                       .on('a').to("s2")
+                       .on('b').to("s5")
+                   .withAccepting("s4", "s2")
+                   .create();
     }
+    
 }
